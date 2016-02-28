@@ -1,0 +1,98 @@
+<html>
+	<head>
+		<title>D3 Lab3</title>
+        <style>
+            body {
+                
+            }
+        </style>
+	</head>
+	
+	<body>
+		<h1 style="background-color:black; color:white; ">Gapiminder - Wealth and Health of Nations</h1>
+        <div>
+            <h2>Countries</h2>
+            <!--
+            <label>Name</label>
+            <input type="text" id="textInput">
+            <button onclick="addCountry()">Add</button>
+            <hr>
+            -->
+            <ul  id="log" style="list-style:none; padding-left:0; float:left; margin-top:-10">
+                <li id="country"></li>
+            </ul>
+            <svg width="600" height="400" style="margin-top:-10">
+                <g id="dotGroup"></g>
+            </svg>
+        </div>
+	</body>
+    
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script>
+        var country = d3.select("#country");
+        var point = d3.select("#dotGroup");
+        
+        //country.text("HELLO");
+        var result = [];
+        d3.json("https://raw.githubusercontent.com/CristianFelix/infoviz/master/Week%203/newData.json", function (error,data){
+            result = data;
+            renderName(result);
+            renderCircle(result);
+        })
+        
+        function renderName(result){
+            country.selectAll("li")
+                .data(result)
+                .enter()
+                    .append("li")
+                    .style("font-weight","bold")
+                    .text(function(d){return d.name ;})
+        }
+        
+        var width = 600,
+            height = 400,
+            margin = {top:20, left:20, right:20, bottom:20},
+            innerWidth = width-margin.left-margin.right,
+            innerHeight = height -margin.top-margin.bottom;
+       
+        point.attr("transform","translate("+margin.left+","+margin.top+")");
+        
+        var xScale = d3.scale.linear().range([0,innerWidth]),
+            yScale = d3.scale.linear().range([innerHeight,0]),
+            rScale = d3.scale.linear().range([5,20]);
+        var colorScale = d3.scale.category10();
+        function renderCircle(result){
+            result = result.filter(function(d){return d.income[2008]!=undefined})
+            var dataPoints = point.selectAll("dotGroup").data(result);
+            
+            xScale.domain(d3.extent(result,function(d){ return d.income[2008]}));
+            yScale.domain(d3.extent(result,function(d){ return d.lifeExpectancy[2008]}));
+            rScale.domain(d3.extent(result,function(d){ return d.population[2008]}));
+            colorScale.domain(d3.extent(result,function(d){return d.region}));
+            
+    
+            dataPoints.enter()
+                        .append("circle")
+                        .attr("r",
+                             function(d,i){return rScale(d.population[2008])})
+                        .attr("cx",
+                              function(d,i){return xScale(d.income[2008])})
+                        .attr("cy",
+                              function(d,i){return yScale(d.lifeExpectancy[2008])})
+                        .attr("fill",function(d,i){ return colorScale(d.region)})
+                        .attr("opacity",0.8);
+        }
+        
+        function addCountry(){
+            var newCountry = document.getElementById("textInput").value;
+            if(newCountry){
+                var log = document.getElementById("log");
+                var newEntry = document.createElement("li");
+                newEntry.innerHTML = newCountry;
+                log.appendChild(newEntry);
+            }
+            else
+                alert("Empty string!");
+        }
+    </script>
+</html>

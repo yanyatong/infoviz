@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<title>D3 Lab2</title>
+	</head>
+	
+	<body>
+		<h1 style="background-color:black; color:white; ">Gapiminder - Wealth and Health of Nations</h1>
+        <div>
+            <h2>Countries</h2>
+            <!--
+            <label>Name</label>
+            <input type="text" id="textInput">
+            <button onclick="addCountry()">Add</button>
+            <hr>
+            -->
+            <ul  id="log" style="list-style:none; padding-left:0">
+                <li id="country"></li>
+            </ul>
+        </div>
+	</body>
+    
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script>
+        var country = d3.select("#country");
+        //country.text("HELLO");
+        var numbers = [1,2,3,4,5,6,7,8];
+        
+        d3.json("https://raw.githubusercontent.com/CristianFelix/infoviz/master/gapminder.json", function (error,data){
+            numbers = data;
+            country.selectAll("li")
+                .data(numbers)
+                .enter()
+                    .append("li")
+                    .style("font-weight","bold")
+                    .text(function(d){return d.name ;});
+        })
+        
+        
+        
+        
+        
+        
+        function addCountry(){
+            var newCountry = document.getElementById("textInput").value;
+            if(newCountry){
+                var log = document.getElementById("log");
+                var newEntry = document.createElement("li");
+                newEntry.innerHTML = newCountry;
+                log.appendChild(newEntry);
+            }
+            else
+                alert("Empty string!");
+        }
+    </script>
+</html>

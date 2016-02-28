@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>D3 Lab1</title>
+	</head>
+	
+	<body>
+		<h1 style="background-color:black; color:white; ">Gapiminder - Wealth and Health of Nations</h1>
+        <div>
+            <h2>Countries</h2>
+            <label>Name</label>
+            <input type="text" id="textInput">
+            <button onclick="addCountry()">Add</button>
+            <hr>
+            <ul  id="log" style="list-style:none; padding-left:0">
+                <li>USA</li>
+                <li>Mexico</li>
+                <li>Canada</li>
+            </ul>
+        </div>
+	</body>
+    
+    <script>
+        
+        function addCountry(){
+            var newCountry = document.getElementById("textInput").value;
+            if(newCountry){
+                var log = document.getElementById("log");
+                var newEntry = document.createElement("li");
+                newEntry.innerHTML = newCountry;
+                log.appendChild(newEntry);
+            }
+            else
+                alert("Empty string!");
+        }
+    </script>
+</html>
